@@ -12,6 +12,7 @@ rogue_lvls = [[15,3,6,1,2],[18,5,8,3,2],[20,7,10,5,3]]
 role_list = [warrior_lvls,tank_lvls,ranger_lvls,rogue_lvls]
 
 #The next few lines are similar to the previous ones, but instead will contain details for each monster.
+e_names = ["Enemy1","Enemy2","Enemy3","Enemy4"]
 e_img = [assets.image("Slime1")]
 e_loc = [[100,30],[100,60],[130,30],[130,60]]
 slime_lvls = [[8,3,5,2,1],[12,5,7,4,1],[16,7,10,6,1]]
@@ -35,7 +36,7 @@ class Player:
 
 class Enemy:
     """class for enemy things"""
-    def __init__(self, img: Image):
+    def __init__(self, img: Image, name: string):
         self.e_sprite: Sprite = sprites.create(img, SpriteKind.enemy)
     def set_values(self, lvl: number, race: number):
         self.race = race_list[race]
@@ -63,7 +64,7 @@ def create_enemies():
     e_lvls = game.ask_for_number("What level do you want them to be?(1-3)", 1)
     e_list = []
     for i in range(0, e_num):
-        e_char = Enemy(e_img[i])
+        e_char = Enemy(e_img[i], "Bob")
         e_char.set_values(e_lvls, randint(0, len(e_img)))
         locations = e_loc[i]
         e_char.e_sprite.x = locations[0]

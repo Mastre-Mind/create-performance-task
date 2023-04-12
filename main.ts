@@ -11,6 +11,7 @@ let ranger_lvls = [[15, 5, 10, 0, 1], [18, 15, 20, 1, 1], [20, 25, 35, 3, 1]]
 let rogue_lvls = [[15, 3, 6, 1, 2], [18, 5, 8, 3, 2], [20, 7, 10, 5, 3]]
 let role_list = [warrior_lvls, tank_lvls, ranger_lvls, rogue_lvls]
 // The next few lines are similar to the previous ones, but instead will contain details for each monster.
+let e_names = ["Enemy1", "Enemy2", "Enemy3", "Enemy4"]
 let e_img = [assets.image`Slime1`]
 let e_loc = [[100, 30], [100, 60], [130, 30], [130, 60]]
 let slime_lvls = [[8, 3, 5, 2, 1], [12, 5, 7, 4, 1], [16, 7, 10, 6, 1]]
@@ -63,7 +64,7 @@ class Enemy {
         /** class for enemy things */
     }
     
-    constructor(img: Image) {
+    constructor(img: Image, name: string) {
         this.e_sprite = sprites.create(img, SpriteKind.Enemy)
     }
     
@@ -104,7 +105,7 @@ function create_enemies() {
     let e_lvls = game.askForNumber("What level do you want them to be?(1-3)", 1)
     let e_list = []
     for (let i = 0; i < e_num; i++) {
-        e_char = new Enemy(e_img[i])
+        e_char = new Enemy(e_img[i], "Bob")
         e_char.set_values(e_lvls, randint(0, e_img.length))
         locations = e_loc[i]
         e_char.e_sprite.x = locations[0]
