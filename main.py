@@ -2,7 +2,7 @@
 p_names = ["Noah","Evan","Reve","Dain"]
 p_imgs = [assets.image("FirstCharacter"),assets.image("SecondCharacter"),assets.image("ThirdCharacter"),assets.image("Placeholder")]
 p_loc = [[60,30],[60,60],[30,30],[30,60]]
-# The next five lines are values for each player class(not python class). There is a list detailing each level 
+# The next five lines are values for each player class(not python class). There is a list detailing each level
 # for one idividual class, and then one msater list that consolidates all of the individual lists.
 # The stats are, in order: health, min dmg, max dmg, defense, num of attacks.
 warrior_lvls = [[20,4,8,3,1],[25,6,10,6,1],[30,8,12,10,2]]
@@ -13,7 +13,7 @@ role_list = [warrior_lvls,tank_lvls,ranger_lvls,rogue_lvls]
 
 #The next few lines are similar to the previous ones, but instead will contain details for each monster.
 e_names = ["Enemy1","Enemy2","Enemy3","Enemy4"]
-e_img = [assets.image("Slime1")]
+e_img = [assets.image("Slime1"),assets.image("Goblin1"),assets.image("Orc1")]
 e_loc = [[100,30],[100,60],[130,30],[130,60]]
 slime_lvls = [[8,3,5,2,1],[12,5,7,4,1],[16,7,10,6,1]]
 goblin_lvls = [[10,4,8,1,1],[12,4,10,2,1],[15,4,12,3,2]]
@@ -36,10 +36,12 @@ class Player:
 
 class Enemy:
     """class for enemy things"""
-    def __init__(self, img: Image, name: string):
-        self.e_sprite: Sprite = sprites.create(img, SpriteKind.enemy)
-    def set_values(self, lvl: number, race: number):
-        self.race = race_list[race]
+    def __init__(self, r_index: number):
+        self.r_index = r_index
+    def set_values(self, lvl: number):
+        self.img = e_img[self.r_index]
+        self.race = race_list[self.r_index]
+        self.e_sprite: Sprite = sprites.create(self.img, SpriteKind.enemy)
         stat_val = self.race[lvl]
         self.health = stat_val[0]
         self.min_dmg = stat_val[1]
@@ -58,18 +60,23 @@ def create_players():
         p_char.p_sprite.x = locations[0]
         p_char.p_sprite.y = locations[1]
         p_list.append(p_char)
+    return p_list
     
+
 def create_enemies():
     e_num = game.ask_for_number("How many enemies do you want?(1-4)",1)
     e_lvls = game.ask_for_number("What level do you want them to be?(1-3)", 1)
     e_list = []
     for i in range(0, e_num):
-        e_char = Enemy(e_img[i], "Bob")
-        e_char.set_values(e_lvls, randint(0, len(e_img)))
+        e_race = randint(0,2)
+        e_char = Enemy(e_race)
+        e_char.set_values(e_lvls)
         locations = e_loc[i]
         e_char.e_sprite.x = locations[0]
         e_char.e_sprite.y = locations[1]
         e_list.append(e_char)
+    return e_list
 
-create_players()
-create_enemies()
+p_list = create_players()
+e_list = create_enemies()
+console.log(e_list)
