@@ -13,6 +13,7 @@ role_list = [warrior_lvls,tank_lvls,ranger_lvls,rogue_lvls]
 
 #The next few lines are similar to the previous ones, but instead will contain details for each monster.
 e_img = [assets.image("Slime1"),assets.image("Goblin1"),assets.image("Orc1")]
+e_alt_img = [assets.image("Slime2"),assets.image("Goblin2"),assets.image("Orc2")]
 e_loc = [[100,30],[100,70],[130,30],[130,70]]
 slime_lvls = [[8,3,5,2,1],[12,5,7,4,1],[16,7,10,6,1]]
 goblin_lvls = [[10,4,8,1,1],[12,4,10,2,1],[15,4,12,3,2]]
@@ -78,28 +79,16 @@ def create_enemies():
     return e_list
 
 def on_up_pressed():
-    if e_arrow.y == 10:
-        pass
-    else:
-        e_arrow.y = 10
+    pass
 
 def on_down_pressed():
-    if e_arrow.y == 50:
-        pass
-    else:
-        e_arrow.y = 50
+    pass
 
 def on_right_pressed():
-    if e_arrow.x == 130:
-        pass
-    else:
-        e_arrow.x = 130
+    pass
 
 def on_left_pressed():
-    if e_arrow.x == 100:
-        pass
-    else:
-        e_arrow.x = 100
+    pass
 
 def player_turn():
     p_turn = True
@@ -141,9 +130,6 @@ Your goal is simply to kill each of the enemies. When it is your turn, the chara
 There will be an arrow above the enemy they are targeting. Use the arrow keys to change your target, 
 then press A to attack. If you want to defend against an enemy attack, press B. Just like in real life, 
 there are no health bars, so keep track of who gets hit!""", DialogLayout.CENTER)
-e_arrow: Sprite = sprites.create(assets.image("EArrow"), SpriteKind.player)
-e_arrow.x = 100
-e_arrow.y = 10
 game.splash("Hey!")
 controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)

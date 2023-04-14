@@ -12,6 +12,7 @@ let rogue_lvls = [[15, 3, 6, 1, 2], [18, 5, 8, 3, 2], [20, 7, 10, 5, 3]]
 let role_list = [warrior_lvls, tank_lvls, ranger_lvls, rogue_lvls]
 // The next few lines are similar to the previous ones, but instead will contain details for each monster.
 let e_img = [assets.image`Slime1`, assets.image`Goblin1`, assets.image`Orc1`]
+let e_alt_img = [assets.image`Slime2`, assets.image`Goblin2`, assets.image`Orc2`]
 let e_loc = [[100, 30], [100, 70], [130, 30], [130, 70]]
 let slime_lvls = [[8, 3, 5, 2, 1], [12, 5, 7, 4, 1], [16, 7, 10, 6, 1]]
 let goblin_lvls = [[10, 4, 8, 1, 1], [12, 4, 10, 2, 1], [15, 4, 12, 3, 2]]
@@ -122,38 +123,18 @@ function create_enemies(): any[] {
 }
 
 function on_up_pressed() {
-    if (e_arrow.y == 10) {
-        
-    } else {
-        e_arrow.y = 10
-    }
     
 }
 
 function on_down_pressed() {
-    if (e_arrow.y == 50) {
-        
-    } else {
-        e_arrow.y = 50
-    }
     
 }
 
 function on_right_pressed() {
-    if (e_arrow.x == 130) {
-        
-    } else {
-        e_arrow.x = 130
-    }
     
 }
 
 function on_left_pressed() {
-    if (e_arrow.x == 100) {
-        
-    } else {
-        e_arrow.x = 100
-    }
     
 }
 
@@ -200,9 +181,6 @@ Your goal is simply to kill each of the enemies. When it is your turn, the chara
 There will be an arrow above the enemy they are targeting. Use the arrow keys to change your target, 
 then press A to attack. If you want to defend against an enemy attack, press B. Just like in real life, 
 there are no health bars, so keep track of who gets hit!`, DialogLayout.Center)
-let e_arrow = sprites.create(assets.image`EArrow`, SpriteKind.Player)
-e_arrow.x = 100
-e_arrow.y = 10
 game.splash("Hey!")
 controller.up.onEvent(ControllerButtonEvent.Pressed, on_up_pressed)
 controller.down.onEvent(ControllerButtonEvent.Pressed, on_down_pressed)
