@@ -1,7 +1,7 @@
 // these lists contain the names, images, and locations for each character
 let p_names = ["Noah", "Evan", "Reve", "Dain"]
 let p_imgs = [assets.image`FirstCharacter`, assets.image`SecondCharacter`, assets.image`ThirdCharacter`, assets.image`Placeholder`]
-let p_loc = [[60, 30], [60, 60], [30, 30], [30, 60]]
+let p_loc = [[60, 30], [60, 70], [30, 30], [30, 70]]
 //  The next five lines are values for each player class(not python class). There is a list detailing each level
 //  for one idividual class, and then one msater list that consolidates all of the individual lists.
 //  The stats are, in order: health, min dmg, max dmg, defense, num of attacks.
@@ -11,9 +11,8 @@ let ranger_lvls = [[15, 5, 10, 0, 1], [18, 15, 20, 1, 1], [20, 25, 35, 3, 1]]
 let rogue_lvls = [[15, 3, 6, 1, 2], [18, 5, 8, 3, 2], [20, 7, 10, 5, 3]]
 let role_list = [warrior_lvls, tank_lvls, ranger_lvls, rogue_lvls]
 // The next few lines are similar to the previous ones, but instead will contain details for each monster.
-let e_names = ["Enemy1", "Enemy2", "Enemy3", "Enemy4"]
 let e_img = [assets.image`Slime1`, assets.image`Goblin1`, assets.image`Orc1`]
-let e_loc = [[100, 30], [100, 60], [130, 30], [130, 60]]
+let e_loc = [[100, 30], [100, 70], [130, 30], [130, 70]]
 let slime_lvls = [[8, 3, 5, 2, 1], [12, 5, 7, 4, 1], [16, 7, 10, 6, 1]]
 let goblin_lvls = [[10, 4, 8, 1, 1], [12, 4, 10, 2, 1], [15, 4, 12, 3, 2]]
 let orc_lvls = [[15, 5, 8, 3, 1], [20, 6, 9, 5, 1], [25, 7, 10, 8, 1]]
@@ -122,6 +121,94 @@ function create_enemies(): any[] {
     return e_list
 }
 
-game.ask("Continue?")
+function on_up_pressed() {
+    if (e_arrow.y == 10) {
+        
+    } else {
+        e_arrow.y = 10
+    }
+    
+}
+
+function on_down_pressed() {
+    if (e_arrow.y == 50) {
+        
+    } else {
+        e_arrow.y = 50
+    }
+    
+}
+
+function on_right_pressed() {
+    if (e_arrow.x == 130) {
+        
+    } else {
+        e_arrow.x = 130
+    }
+    
+}
+
+function on_left_pressed() {
+    if (e_arrow.x == 100) {
+        
+    } else {
+        e_arrow.x = 100
+    }
+    
+}
+
+function player_turn() {
+    let p_turn = true
+    while (p_turn) {
+        controller.up.onEvent(ControllerButtonEvent.Pressed, on_up_pressed)
+        controller.down.onEvent(ControllerButtonEvent.Pressed, on_down_pressed)
+        controller.left.onEvent(ControllerButtonEvent.Pressed, on_left_pressed)
+        controller.right.onEvent(ControllerButtonEvent.Pressed, on_right_pressed)
+    }
+}
+
 let p_list = create_players()
 let e_list = create_enemies()
+game.setDialogFrame(img`
+    ..99a99aa99aa99aa99999..
+    .9119a889a889a889a99119.
+    a18819a889a889a889a1881a
+    a188199aa99aa99aa991881a
+    a91191cccccccccccc19119a
+    99a91cccccccccccccc199a9
+    9a99cccccccccccccccc9a89
+    a98acccccccccccccccca88a
+    a88acccccccccccccccca89a
+    98a9cccccccccccccccc99a9
+    9a99cccccccccccccccc9a89
+    a98acccccccccccccccca88a
+    a88acccccccccccccccca89a
+    98a9cccccccccccccccc99a9
+    9a99cccccccccccccccc9a89
+    a98acccccccccccccccca88a
+    a88acccccccccccccccca89a
+    98a9cccccccccccccccc99a9
+    9a991cccccccccccccc19a99
+    a91191cccccccccccc19119a
+    a188199aa99aa99aa991881a
+    a1881a988a988a988a91881a
+    .a1199a988a988a988a911a.
+    ..aaa99aa99aa99aa99aaa..
+`)
+game.showLongText(`Welcome! This is a battle simulator inspired by the early Final Fantasy games. 
+Your goal is simply to kill each of the enemies. When it is your turn, the character who will act will be lit up. 
+There will be an arrow above the enemy they are targeting. Use the arrow keys to change your target, 
+then press A to attack. If you want to defend against an enemy attack, press B. Just like in real life, 
+there are no health bars, so keep track of who gets hit!`, DialogLayout.Center)
+let e_arrow = sprites.create(assets.image`EArrow`, SpriteKind.Player)
+e_arrow.x = 100
+e_arrow.y = 10
+game.splash("Hey!")
+controller.up.onEvent(ControllerButtonEvent.Pressed, on_up_pressed)
+controller.down.onEvent(ControllerButtonEvent.Pressed, on_down_pressed)
+controller.left.onEvent(ControllerButtonEvent.Pressed, on_left_pressed)
+controller.right.onEvent(ControllerButtonEvent.Pressed, on_right_pressed)
+let playing = true
+while (playing) {
+    player_turn()
+}
