@@ -122,6 +122,6 @@ function create_enemies(): any[] {
     return e_list
 }
 
+game.ask("Continue?")
 let p_list = create_players()
 let e_list = create_enemies()
-console.log(e_list)

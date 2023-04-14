@@ -77,6 +77,6 @@ def create_enemies():
         e_list.append(e_char)
     return e_list
 
+game.ask("Continue?")
 p_list = create_players()
 e_list = create_enemies()
-console.log(e_list)
