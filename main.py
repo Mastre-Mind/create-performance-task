@@ -33,6 +33,8 @@ class Player:
         self.max_dmg = stat_val[2]
         self.defense = stat_val[3]
         self.attacks = stat_val[4]
+    def destroy_self(self):
+        sprites.destroy(self.p_sprite)
 
 class Enemy:
     """class for enemy things"""
@@ -49,18 +51,25 @@ class Enemy:
         self.defense = stat_val[3]
         self.attacks = stat_val[4]
 
-def create_players():
-    p_num = game.ask_for_number("How many characters do you want?(1-4)",1)
-    p_lvls = game.ask_for_number("What level do you want them to be?(1-3)", 1)
-    p_list = []
-    for i in range(0,p_num):
-        p_char = Player(p_names[i],p_imgs[i])
-        p_char.set_values(p_lvls, i)
-        locations = p_loc[i]
-        p_char.p_sprite.x = locations[0]
-        p_char.p_sprite.y = locations[1]
-        p_list.append(p_char)
-    return p_list
+def create_players(p_num: number, p_lvls: number):
+    p_num_bad = p_num > 4 or p_num < 1
+    p_lvl_bad = p_lvls > 3 or p_lvls < 1
+    if p_num_bad or p_lvl_bad:
+        p_num = game.ask_for_number("How many characters do you want?(1-4)",1)
+        p_lvls = game.ask_for_number("What level do you want them to be?(1-3)", 1)
+        p_list = create_players(p_num, p_lvls)
+        return p_list
+    else:
+        p_list = []
+        for i in range(0,p_num):
+            p_char = Player(p_names[i],p_imgs[i])
+            p_char.set_values(p_lvls, i)
+            locations = p_loc[i]
+            p_char.p_sprite.x = locations[0]
+            p_char.p_sprite.y = locations[1]
+            char_sprite = p_char.p_sprite
+            p_list.append(char_sprite)
+        return p_list
     
 
 def create_enemies():
@@ -74,41 +83,13 @@ def create_enemies():
         locations = e_loc[i]
         e_char.e_sprite.x = locations[0]
         e_char.e_sprite.y = locations[1]
-        e_list.append(e_char)
+        e_sprite = e_char.e_sprite
+        e_list.append(e_sprite)
     return e_list
-
-def on_up_pressed():
-    if e_arrow.y == 10:
-        pass
-    else:
-        e_arrow.y = 10
-
-def on_down_pressed():
-    if e_arrow.y == 50:
-        pass
-    else:
-        e_arrow.y = 50
-
-def on_right_pressed():
-    if e_arrow.x == 130:
-        pass
-    else:
-        e_arrow.x = 130
-
-def on_left_pressed():
-    if e_arrow.x == 100:
-        pass
-    else:
-        e_arrow.x = 100
-
-def player_turn():
-    p_turn = True
-    while p_turn:
-        controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
-        controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
-        controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
-        controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
-p_list = create_players()
+    
+p_num = game.ask_for_number("How many characters do you want?(1-4)",1)
+p_lvls = game.ask_for_number("What level do you want them to be?(1-3)", 1)
+p_list = create_players(p_num, p_lvls)
 e_list = create_enemies()
 game.set_dialog_frame(img("""
     ..99a99aa99aa99aa99999..
@@ -139,16 +120,12 @@ game.set_dialog_frame(img("""
 game.show_long_text("""Welcome! This is a battle simulator inspired by the early Final Fantasy games. 
 Your goal is simply to kill each of the enemies. When it is your turn, the character who will act will be lit up. 
 There will be an arrow above the enemy they are targeting. Use the arrow keys to change your target, 
-then press A to attack. If you want to defend against an enemy attack, press B. Just like in real life, 
-there are no health bars, so keep track of who gets hit!""", DialogLayout.CENTER)
-e_arrow: Sprite = sprites.create(assets.image("EArrow"), SpriteKind.player)
-e_arrow.x = 100
-e_arrow.y = 10
-game.splash("Hey!")
-controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
-controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
-controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
-controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
-playing = True
-while playing:
-    player_turn()
+then press A to attack. Just like in real life, there are no health bars, so keep track of who gets hit!""", DialogLayout.CENTER)
+reset = game.ask("Would you like to recreate your characters?", "(This can only be done once)")
+if reset:
+    for i in p_list:
+        sprites.destroy(i)
+    p_num = game.ask_for_number("How many characters do you want this time?(1-4)",1)
+    p_lvls = game.ask_for_number("What level do you want them to be?(1-3)", 1)
+    p_list = create_players(p_num, p_lvls)
+    

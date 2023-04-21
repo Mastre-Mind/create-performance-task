@@ -47,6 +47,10 @@ class Player {
         this.attacks = stat_val[4]
     }
     
+    public destroy_self() {
+        sprites.destroy(this.p_sprite)
+    }
+    
 }
 
 Player.__initPlayer()
@@ -85,27 +89,39 @@ class Enemy {
 
 Enemy.__initEnemy()
 
-function create_players(): any[] {
+function create_players(p_num: number, p_lvls: number): any[] {
+    let p_list: any[];
     let p_char: Player;
     let locations: number[];
-    let p_num = game.askForNumber("How many characters do you want?(1-4)", 1)
-    let p_lvls = game.askForNumber("What level do you want them to be?(1-3)", 1)
-    let p_list = []
-    for (let i = 0; i < p_num; i++) {
-        p_char = new Player(p_names[i], p_imgs[i])
-        p_char.set_values(p_lvls, i)
-        locations = p_loc[i]
-        p_char.p_sprite.x = locations[0]
-        p_char.p_sprite.y = locations[1]
-        p_list.push(p_char)
+    let char_sprite: Sprite;
+    let p_num_bad = p_num > 4 || p_num < 1
+    let p_lvl_bad = p_lvls > 3 || p_lvls < 1
+    if (p_num_bad || p_lvl_bad) {
+        p_num = game.askForNumber("How many characters do you want?(1-4)", 1)
+        p_lvls = game.askForNumber("What level do you want them to be?(1-3)", 1)
+        p_list = create_players(p_num, p_lvls)
+        return p_list
+    } else {
+        p_list = []
+        for (let i = 0; i < p_num; i++) {
+            p_char = new Player(p_names[i], p_imgs[i])
+            p_char.set_values(p_lvls, i)
+            locations = p_loc[i]
+            p_char.p_sprite.x = locations[0]
+            p_char.p_sprite.y = locations[1]
+            char_sprite = p_char.p_sprite
+            p_list.push(char_sprite)
+        }
+        return p_list
     }
-    return p_list
+    
 }
 
 function create_enemies(): any[] {
     let e_race: number;
     let e_char: Enemy;
     let locations: number[];
+    let e_sprite: Sprite;
     let e_num = game.askForNumber("How many enemies do you want?(1-4)", 1)
     let e_lvls = game.askForNumber("What level do you want them to be?(1-3)", 1)
     let e_list = []
@@ -116,58 +132,15 @@ function create_enemies(): any[] {
         locations = e_loc[i]
         e_char.e_sprite.x = locations[0]
         e_char.e_sprite.y = locations[1]
-        e_list.push(e_char)
+        e_sprite = e_char.e_sprite
+        e_list.push(e_sprite)
     }
     return e_list
 }
 
-function on_up_pressed() {
-    if (e_arrow.y == 10) {
-        
-    } else {
-        e_arrow.y = 10
-    }
-    
-}
-
-function on_down_pressed() {
-    if (e_arrow.y == 50) {
-        
-    } else {
-        e_arrow.y = 50
-    }
-    
-}
-
-function on_right_pressed() {
-    if (e_arrow.x == 130) {
-        
-    } else {
-        e_arrow.x = 130
-    }
-    
-}
-
-function on_left_pressed() {
-    if (e_arrow.x == 100) {
-        
-    } else {
-        e_arrow.x = 100
-    }
-    
-}
-
-function player_turn() {
-    let p_turn = true
-    while (p_turn) {
-        controller.up.onEvent(ControllerButtonEvent.Pressed, on_up_pressed)
-        controller.down.onEvent(ControllerButtonEvent.Pressed, on_down_pressed)
-        controller.left.onEvent(ControllerButtonEvent.Pressed, on_left_pressed)
-        controller.right.onEvent(ControllerButtonEvent.Pressed, on_right_pressed)
-    }
-}
-
-let p_list = create_players()
+let p_num = game.askForNumber("How many characters do you want?(1-4)", 1)
+let p_lvls = game.askForNumber("What level do you want them to be?(1-3)", 1)
+let p_list = create_players(p_num, p_lvls)
 let e_list = create_enemies()
 game.setDialogFrame(img`
     ..99a99aa99aa99aa99999..
@@ -198,17 +171,14 @@ game.setDialogFrame(img`
 game.showLongText(`Welcome! This is a battle simulator inspired by the early Final Fantasy games. 
 Your goal is simply to kill each of the enemies. When it is your turn, the character who will act will be lit up. 
 There will be an arrow above the enemy they are targeting. Use the arrow keys to change your target, 
-then press A to attack. If you want to defend against an enemy attack, press B. Just like in real life, 
-there are no health bars, so keep track of who gets hit!`, DialogLayout.Center)
-let e_arrow = sprites.create(assets.image`EArrow`, SpriteKind.Player)
-e_arrow.x = 100
-e_arrow.y = 10
-game.splash("Hey!")
-controller.up.onEvent(ControllerButtonEvent.Pressed, on_up_pressed)
-controller.down.onEvent(ControllerButtonEvent.Pressed, on_down_pressed)
-controller.left.onEvent(ControllerButtonEvent.Pressed, on_left_pressed)
-controller.right.onEvent(ControllerButtonEvent.Pressed, on_right_pressed)
-let playing = true
-while (playing) {
-    player_turn()
+then press A to attack. Just like in real life, there are no health bars, so keep track of who gets hit!`, DialogLayout.Center)
+let reset = game.ask("Would you like to recreate your characters?", "(This can only be done once)")
+if (reset) {
+    for (let i of p_list) {
+        sprites.destroy(i)
+    }
+    p_num = game.askForNumber("How many characters do you want this time?(1-4)", 1)
+    p_lvls = game.askForNumber("What level do you want them to be?(1-3)", 1)
+    p_list = create_players(p_num, p_lvls)
 }
+
